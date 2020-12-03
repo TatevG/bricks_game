@@ -3,12 +3,12 @@ var ctx = canvas.getContext('2d');
 
 var x = canvas.width/2;
 var y = canvas.height - 30;
-var dx = 2;
-var dy = -2;
+var dx = 5;
+var dy = -5;
 var ballRadius = 10;
 var gradientInnerRadius = 1;
 var paddleHeight = 10;
-var paddleWidth = 75;
+var paddleWidth = 275;
 var paddleX = (canvas.width-paddleWidth)/2;
 var rightPressed = false;
 var leftPressed = false;
@@ -21,14 +21,21 @@ var brickOffsetTop = 30;
 var brickOffsetLeft = 30;
 var score = 0;
 var lives = 3;
+var level = 1;
+var maxLevel = 5;
 
 var bricks = [];
-for (c=0; c<brickColumnCount; c++) {
-	bricks[c] = [];
-	for (r=0; r<brickRowCount; r++) {
-		bricks[c][r] = {x: 0, y:0, status: 1};
+
+const initBricks = () => {
+	for (c=0; c<brickColumnCount; c++) {
+		bricks[c] = [];
+		for (r=0; r<brickRowCount; r++) {
+			bricks[c][r] = {x: 0, y:0, status: 1};
+		}
 	}
 }
+
+initBricks();
 
 const keyDownHandler = (e) => {
 	if(e.keyCode == 39) {
@@ -98,8 +105,16 @@ const collisionDetection = () => {
 					b.status = 0;
 					score++;
 					if(score == brickRowCount*brickColumnCount) {
-						alert('YOU WIN, CONGRADULATIONS!');
-						document.location.reload();
+						if(level === maxLevel) {
+							alert('YOU WIN, CONGRADULATIONS!');
+							document.location.reload();
+						} else {
+							level++;
+							initBricks();
+							score = 0;
+							paddleWidth -= 50 ;
+							// start the next level
+						}
 					}
 				}
 			}
@@ -119,6 +134,12 @@ const drawLives = () => {
 	ctx.fillText('Lives: '+lives, canvas.width-65, 20);
 }
 
+const drawLevel = () => {
+	ctx.font = '16px Arial';
+	ctx.fillStyle = '#ff2599';
+	ctx.fillText('Level: '+level, 210, 20);
+}
+
 const draw = () => {
 	ctx.clearRect(0,0, canvas.width, canvas.height);
 	drawBricks()
@@ -126,6 +147,7 @@ const draw = () => {
 	drawPaddle();
 	drawScore();
 	drawLives();
+	drawLevel();
 	collisionDetection();
 
 	if(y + dy < ballRadius) {
@@ -141,8 +163,6 @@ const draw = () => {
 			} else {
 				x = canvas.width/2;
 				y = canvas.height-30;
-				dx = 2;
-				dy = -2;
 				paddleX = (canvas.width-paddleWidth)/2;
 			}
 		}
@@ -152,10 +172,10 @@ const draw = () => {
 	}
 
 	if(rightPressed && paddleX < canvas.width-paddleWidth) {
-		paddleX += 7;
+		paddleX += 10;
 	}
 	else if(leftPressed && paddleX > 0) {
-		paddleX -= 7;
+		paddleX -= 10;
 	}
 
 	x += dx;
