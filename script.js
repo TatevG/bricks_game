@@ -6,6 +6,7 @@ var y = canvas.height - 30;
 var dx = 2;
 var dy = -2;
 var ballRadius = 10;
+var gradientInnerRadius = 1;
 var paddleHeight = 10;
 var paddleWidth = 75;
 var paddleX = (canvas.width-paddleWidth)/2;
@@ -60,7 +61,7 @@ const drawBricks = () => {
 				bricks[c][r].y = brickY;
 				ctx.beginPath();
 				ctx.rect(brickX, brickY, brickWidth, brickHeight);
-				ctx.fillStyle = '#0095DD';
+				ctx.fillStyle = '#ff2599 ';
 				ctx.fill();
 				ctx.closePath();
 			}
@@ -70,8 +71,11 @@ const drawBricks = () => {
 
 const drawBall = () => {
 	ctx.beginPath();
+	var gradient = ctx.createRadialGradient(x, y, gradientInnerRadius, x, y, ballRadius);
+	gradient.addColorStop(0, 'white');
+	gradient.addColorStop(1, '#ff2599');
 	ctx.arc(x, y, ballRadius, 0, Math.PI*2);
-	ctx.fillStyle = '#0095DD';
+	ctx.fillStyle = gradient;
 	ctx.fill();
 	ctx.closePath();
 }
@@ -79,7 +83,7 @@ const drawBall = () => {
 const drawPaddle = () => {
 	ctx.beginPath();
 	ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
-	ctx.fillStyle = '#0095DD';
+	ctx.fillStyle = '#ff2599';
 	ctx.fill();
 	ctx.closePath();
 }
@@ -105,13 +109,13 @@ const collisionDetection = () => {
 
 const drawScore = () => {
 	ctx.font = '16px Arial';
-	ctx.fillStyle = '#0095DD';
+	ctx.fillStyle = '#ff2599';
 	ctx.fillText('Score: '+score, 8, 20);
 }
 
 const drawLives = () => {
 	ctx.font = '16px Arial';
-	ctx.fillStyle = '#0095DD';
+	ctx.fillStyle = '#ff2599';
 	ctx.fillText('Lives: '+lives, canvas.width-65, 20);
 }
 
